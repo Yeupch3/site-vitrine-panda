@@ -1,0 +1,2893 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panda — Propreté Efficace</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <style>
+        /* ── RESET & BASE ── */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #F7FAF4;
+            color: #161C13;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        img {
+            max-width: 100%;
+            display: block;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        ul {
+            list-style: none;
+        }
+        button {
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-family: inherit;
+        }
+
+        :root {
+            --green-deep: #1E4D18;
+            --green-mid: #3E7A35;
+            --green-light: #B8D4B3;
+            --sage: #EAF3E8;
+            --gold: #C9952A;
+            --gold-light: #F5E6B8;
+            --white: #F7FAF4;
+            --charcoal: #161C13;
+            --grey: #6B7280;
+            --grey-light: #E5E7EB;
+            --radius-sm: 8px;
+            --radius-md: 16px;
+            --radius-lg: 32px;
+            --shadow-soft: 0 4px 24px rgba(30, 77, 24, 0.10);
+            --shadow-card: 0 8px 40px rgba(30, 77, 24, 0.15);
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ── SCROLL PROGRESS ── */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 300;
+            height: 3px;
+            width: 0%;
+            background: linear-gradient(90deg, var(--green-mid) 0%, var(--gold) 100%);
+            transition: width 0.1s linear;
+        }
+
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+
+        /* ── NAV ── */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(247, 250, 244, 0.92);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(184, 212, 179, 0.5);
+            transition: var(--transition);
+        }
+        nav.scrolled {
+            box-shadow: 0 2px 20px rgba(30, 77, 24, 0.08);
+        }
+        .nav-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 32px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: var(--green-deep);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(30, 77, 24, 0.3);
+        }
+        .logo-text {
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--green-deep);
+            letter-spacing: -0.5px;
+        }
+        .logo-sub {
+            font-size: 0.6rem;
+            font-weight: 500;
+            color: var(--grey);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: block;
+            line-height: 1;
+            margin-top: -2px;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 36px;
+        }
+        .nav-link {
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--grey);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: color var(--transition);
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--green-deep);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform var(--transition);
+            border-radius: 2px;
+        }
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--green-deep);
+        }
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            transform: scaleX(1);
+        }
+        .nav-cta {
+            background: var(--green-deep);
+            color: var(--white) !important;
+            padding: 10px 22px;
+            border-radius: 50px;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+        }
+        .nav-cta:hover {
+            background: var(--green-mid);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(30, 77, 24, 0.3);
+        }
+        .nav-cta::after {
+            display: none;
+        }
+        .burger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 4px;
+        }
+        .burger span {
+            display: block;
+            width: 26px;
+            height: 2px;
+            background: var(--green-deep);
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 72px;
+            left: 0;
+            right: 0;
+            background: var(--white);
+            border-bottom: 1px solid var(--green-light);
+            padding: 24px 32px;
+            z-index: 99;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .mobile-menu.open {
+            display: flex;
+        }
+        .mobile-menu .nav-link {
+            font-size: 1.1rem;
+        }
+
+        /* ── HERO ── */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, #E8F4E6 0%, var(--white) 55%, #FBF3E2 100%);
+            position: relative;
+            overflow: hidden;
+            padding-top: 72px;
+        }
+        .sparkle {
+            position: absolute;
+            pointer-events: none;
+            border-radius: 50%;
+            opacity: 0;
+            animation: sparklePop 6s ease-in-out infinite;
+        }
+        .sparkle::before {
+            content: '✦';
+            position: absolute;
+            font-size: inherit;
+            color: var(--green-mid);
+            opacity: 0.5;
+        }
+        @keyframes sparklePop {
+            0% {
+                opacity: 0;
+                transform: scale(0) rotate(0deg);
+            }
+            30% {
+                opacity: 0.7;
+                transform: scale(1) rotate(60deg);
+            }
+            70% {
+                opacity: 0.4;
+                transform: scale(1.1) rotate(120deg);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0) rotate(180deg);
+            }
+        }
+        .hero-deco {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: var(--green-light);
+            opacity: 0.15;
+            animation: floatBubble 9s ease-in-out infinite;
+        }
+        .bubble:nth-child(1) {
+            width: 200px;
+            height: 200px;
+            top: 8%;
+            left: -5%;
+            animation-delay: 0s;
+        }
+        .bubble:nth-child(2) {
+            width: 80px;
+            height: 80px;
+            top: 70%;
+            left: 4%;
+            animation-delay: 2s;
+            background: #F5E6B8;
+        }
+        .bubble:nth-child(3) {
+            width: 280px;
+            height: 280px;
+            top: 0%;
+            right: -4%;
+            animation-delay: 1s;
+        }
+        .bubble:nth-child(4) {
+            width: 120px;
+            height: 120px;
+            bottom: 5%;
+            right: 8%;
+            animation-delay: 3s;
+            background: #F5E6B8;
+        }
+        .bubble:nth-child(5) {
+            width: 60px;
+            height: 60px;
+            top: 40%;
+            left: 30%;
+            animation-delay: 4s;
+        }
+        @keyframes floatBubble {
+            0%,
+            100% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-22px) scale(1.06);
+            }
+        }
+        .hero-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 80px 32px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, var(--green-deep) 0%, #5BAF4E 50%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, rgba(184, 212, 179, 0.6), rgba(184, 212, 179, 0.3));
+            color: var(--green-deep);
+            border: 1px solid rgba(62, 122, 53, 0.3);
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+            backdrop-filter: blur(8px);
+            animation: badgeShimmer 3s ease-in-out infinite;
+        }
+        @keyframes badgeShimmer {
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(62, 122, 53, 0);
+            }
+            50% {
+                box-shadow: 0 0 20px 2px rgba(62, 122, 53, 0.2);
+            }
+        }
+        .hero-title {
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: clamp(2.4rem, 4.5vw, 4rem);
+            line-height: 1.1;
+            color: var(--charcoal);
+            margin-bottom: 24px;
+            letter-spacing: -1.5px;
+        }
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: var(--grey);
+            margin-bottom: 40px;
+            max-width: 460px;
+            line-height: 1.8;
+        }
+        .hero-actions {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--green-deep), var(--green-mid));
+            color: var(--white);
+            padding: 16px 32px;
+            border-radius: 50px;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border: 2px solid transparent;
+            box-shadow: 0 4px 16px rgba(30, 77, 24, 0.2);
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(30, 77, 24, 0.3);
+            filter: brightness(1.08);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: var(--green-deep);
+            padding: 14px 32px;
+            border-radius: 50px;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            border: 2px solid var(--green-deep);
+            transition: all var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .btn-secondary:hover {
+            background: var(--sage);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(30, 77, 24, 0.12);
+        }
+
+        .hero-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .hero-mosaic {
+            width: min(500px, 96%);
+            display: grid;
+            grid-template-columns: 1.3fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 14px;
+            position: relative;
+        }
+        .mosaic-img {
+            border-radius: var(--radius-md);
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            box-shadow: var(--shadow-card);
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+            animation: mosaic-enter 0.9s ease both;
+        }
+        @keyframes mosaic-enter {
+            from {
+                opacity: 0;
+                transform: scale(0.93) translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        .mosaic-img:hover {
+            transform: scale(1.04);
+            box-shadow: 0 16px 48px rgba(30, 77, 24, 0.22);
+        }
+        .mosaic-img.m1 {
+            grid-row: 1 / 3;
+            height: 340px;
+            border-radius: var(--radius-lg) var(--radius-md) var(--radius-md) var(--radius-lg);
+            animation-delay: 0.1s;
+        }
+        .mosaic-img.m2 {
+            height: 160px;
+            border-radius: var(--radius-md) var(--radius-lg) var(--radius-md) var(--radius-md);
+            animation-delay: 0.2s;
+        }
+        .mosaic-img.m3 {
+            height: 160px;
+            animation-delay: 0.3s;
+            border-radius: var(--radius-md) var(--radius-md) var(--radius-lg) var(--radius-md);
+        }
+        .mosaic-panda-chip {
+            position: absolute;
+            bottom: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            border-radius: 50px;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow-card);
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--green-deep);
+            white-space: nowrap;
+            z-index: 2;
+            animation: chipFloat 3s ease-in-out infinite;
+        }
+        @keyframes chipFloat {
+            0%,
+            100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            50% {
+                transform: translateX(-50%) translateY(-5px);
+            }
+        }
+        .hero-tag {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-md);
+            padding: 10px 16px;
+            box-shadow: var(--shadow-card);
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 0.82rem;
+            color: var(--green-deep);
+            white-space: nowrap;
+            border: 1px solid rgba(184, 212, 179, 0.5);
+        }
+        .hero-tag-1 {
+            bottom: 12%;
+            left: -12%;
+            animation: tagFloat1 4s ease-in-out infinite;
+        }
+        .hero-tag-2 {
+            top: 14%;
+            right: -12%;
+            animation: tagFloat2 4s ease-in-out infinite 0.8s;
+        }
+        @keyframes tagFloat1 {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+        @keyframes tagFloat2 {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(8px);
+            }
+        }
+        .hero-tag span {
+            font-size: 1.1rem;
+            margin-right: 6px;
+        }
+
+        .hero-stats {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 32px 80px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--green-light);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+        .stat {
+            background: var(--white);
+            padding: 36px;
+            text-align: center;
+            transition: background var(--transition);
+        }
+        .stat:hover {
+            background: var(--sage);
+        }
+        .stat-number {
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 2.4rem;
+            background: linear-gradient(135deg, var(--green-deep), var(--green-mid));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--grey);
+            margin-top: 6px;
+        }
+
+        /* ── SHARED SECTION ── */
+        .section {
+            padding: 100px 32px;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+        .section-eyebrow {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--green-mid);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-eyebrow::before {
+            content: '';
+            display: block;
+            width: 28px;
+            height: 2px;
+            background: var(--green-mid);
+            border-radius: 2px;
+        }
+        .section-title {
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: clamp(1.8rem, 3vw, 2.8rem);
+            color: var(--charcoal);
+            line-height: 1.2;
+            letter-spacing: -0.8px;
+            margin-bottom: 16px;
+        }
+        .section-desc {
+            color: var(--grey);
+            font-size: 1.05rem;
+            max-width: 560px;
+            line-height: 1.8;
+            margin-bottom: 60px;
+        }
+
+        /* ── WAVE ── */
+        .wave-divider {
+            width: 100%;
+            height: 80px;
+            overflow: hidden;
+            position: relative;
+            margin-top: -2px;
+        }
+        .wave-divider svg {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* ── WHY STRIP ── */
+        .why-strip {
+            background: linear-gradient(135deg, var(--green-deep) 0%, #2A6823 100%);
+            padding: 90px 32px;
+            position: relative;
+            overflow: hidden;
+        }
+        .why-strip::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            pointer-events: none;
+        }
+        .why-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+            position: relative;
+            z-index: 1;
+        }
+        .why-card {
+            text-align: center;
+            color: var(--white);
+            padding: 28px 20px;
+            border-radius: var(--radius-md);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all var(--transition);
+        }
+        .why-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-6px);
+        }
+        .why-icon-wrap {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 18px;
+            font-size: 1.9rem;
+        }
+        .why-card h3 {
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        .why-card p {
+            font-size: 0.88rem;
+            opacity: 0.75;
+            line-height: 1.7;
+        }
+
+        /* ── PREVIEW CARDS ── */
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+            margin-bottom: 48px;
+        }
+        .preview-card {
+            background: var(--white);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            transition: transform var(--transition), box-shadow var(--transition);
+            cursor: pointer;
+            border: 1.5px solid var(--green-light);
+        }
+        .preview-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-card);
+            border-color: var(--green-mid);
+        }
+        .preview-img {
+            height: 240px;
+            overflow: hidden;
+            position: relative;
+            background: linear-gradient(135deg, var(--green-light), var(--sage));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+        .preview-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            inset: 0;
+            transition: transform 0.5s ease;
+        }
+        .preview-card:hover .preview-img img {
+            transform: scale(1.07);
+        }
+        .preview-img .fallback-emoji {
+            position: relative;
+            z-index: 1;
+        }
+        .preview-img-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(30, 77, 24, 0);
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background var(--transition);
+        }
+        .preview-card:hover .preview-img-overlay {
+            background: rgba(30, 77, 24, 0.2);
+        }
+        .preview-overlay-btn {
+            background: white;
+            color: var(--green-deep);
+            border: none;
+            padding: 10px 22px;
+            border-radius: 50px;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all var(--transition);
+            cursor: pointer;
+        }
+        .preview-card:hover .preview-overlay-btn {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .preview-body {
+            padding: 20px 22px;
+        }
+        .preview-cat {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--green-mid);
+            margin-bottom: 6px;
+        }
+        .preview-name {
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--charcoal);
+            margin-bottom: 8px;
+        }
+        .preview-price {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--green-deep);
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        /* ── PROMISE ── */
+        .promise {
+            background: linear-gradient(180deg, var(--sage) 0%, var(--white) 100%);
+            padding: 100px 32px;
+        }
+        .promise-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+        .promise-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .promise-rings {
+            width: min(420px, 100%);
+            aspect-ratio: 1;
+            position: relative;
+        }
+        .ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 2px solid var(--green-light);
+            animation: ringPulse 4s ease-in-out infinite;
+        }
+        .ring:nth-child(2) {
+            inset: 12%;
+            border-color: var(--green-mid);
+            animation-delay: 0.5s;
+        }
+        .ring:nth-child(3) {
+            inset: 26%;
+            border-color: var(--green-deep);
+            animation-delay: 1s;
+            background: var(--sage);
+        }
+        .ring-center {
+            position: absolute;
+            inset: 36%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(2rem, 4vw, 3.2rem);
+        }
+        @keyframes ringPulse {
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.04);
+                opacity: 0.7;
+            }
+        }
+        .promise-list {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            margin-top: 40px;
+        }
+        .promise-item {
+            display: flex;
+            gap: 18px;
+            align-items: flex-start;
+            padding: 20px;
+            border-radius: var(--radius-md);
+            transition: background var(--transition);
+        }
+        .promise-item:hover {
+            background: var(--sage);
+        }
+        .promise-bullet {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--green-light), rgba(184, 212, 179, 0.4));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+        .promise-item h4 {
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--charcoal);
+            margin-bottom: 4px;
+        }
+        .promise-item p {
+            font-size: 0.9rem;
+            color: var(--grey);
+            line-height: 1.6;
+        }
+
+        /* ── TESTIMONIALS ── */
+        .testi-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        .testi-card {
+            border: 1.5px solid var(--green-light);
+            border-radius: var(--radius-md);
+            padding: 28px;
+            transition: box-shadow var(--transition), transform var(--transition);
+            background: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+        .testi-card::before {
+            content: '"';
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            font-size: 7rem;
+            color: var(--sage);
+            font-family: Georgia, serif;
+            line-height: 1;
+            pointer-events: none;
+        }
+        .testi-card:hover {
+            box-shadow: var(--shadow-card);
+            transform: translateY(-4px);
+        }
+        .testi-stars {
+            color: var(--gold);
+            font-size: 1rem;
+            margin-bottom: 14px;
+            letter-spacing: 2px;
+        }
+        .testi-text {
+            font-size: 0.95rem;
+            color: var(--grey);
+            line-height: 1.7;
+            margin-bottom: 20px;
+            font-style: italic;
+            position: relative;
+            z-index: 1;
+        }
+        .testi-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .testi-avatar {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: var(--green-light);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            border: 2px solid var(--green-light);
+        }
+        .testi-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .testi-name {
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--charcoal);
+        }
+        .testi-loc {
+            font-size: 0.78rem;
+            color: var(--grey);
+        }
+        .testi-verified {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.7rem;
+            color: var(--green-mid);
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        /* ════════════════════════════════════════
+                   PRODUCTS PAGE — IMAGES AVEC DESIGN
+                   ════════════════════════════════════════ */
+        .products-hero {
+            padding: 160px 32px 60px;
+            background: linear-gradient(135deg, var(--sage) 0%, var(--white) 60%, #FBF3E2 100%);
+            text-align: center;
+        }
+        .filter-bar {
+            background: var(--white);
+            border-bottom: 1px solid var(--green-light);
+            position: sticky;
+            top: 72px;
+            z-index: 50;
+            padding: 0 32px;
+        }
+        .filter-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            gap: 8px;
+            padding: 16px 0;
+            overflow-x: auto;
+        }
+        .filter-btn {
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--grey);
+            background: var(--sage);
+            border: 1.5px solid transparent;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all var(--transition);
+        }
+        .filter-btn.active,
+        .filter-btn:hover {
+            background: var(--green-deep);
+            color: var(--white);
+            border-color: var(--green-deep);
+        }
+        .products-section {
+            padding: 60px 32px 100px;
+        }
+        .products-grid {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 32px;
+        }
+
+        /* ── CARTE PRODUIT AVEC IMAGE DESIGN ── */
+        .product-card {
+            background: var(--white);
+            border: 1.5px solid var(--green-light);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            transition: all var(--transition);
+            position: relative;
+        }
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-card);
+            border-color: var(--green-mid);
+        }
+
+        /* badge */
+        .product-badge {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            background: var(--green-deep);
+            color: var(--white);
+            padding: 5px 14px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            z-index: 10;
+            box-shadow: 0 2px 12px rgba(30, 77, 24, 0.25);
+        }
+        .product-badge.promo {
+            background: var(--gold);
+            color: white;
+        }
+
+        /* ── conteneur image ── */
+        .product-img {
+            height: 260px;
+            overflow: hidden;
+            position: relative;
+            background: linear-gradient(135deg, var(--sage), var(--green-light));
+        }
+        .product-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            inset: 0;
+            transition: transform 0.6s ease;
+        }
+        .product-card:hover .product-img img {
+            transform: scale(1.08);
+        }
+
+        /* ── overlay design sur l'image ── */
+        .product-img-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            background: linear-gradient(180deg,
+                    rgba(30, 77, 24, 0) 30%,
+                    rgba(30, 77, 24, 0.45) 80%,
+                    rgba(30, 77, 24, 0.70) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 20px 22px 18px;
+            transition: background var(--transition);
+        }
+        .product-card:hover .product-img-overlay {
+            background: linear-gradient(180deg,
+                    rgba(30, 77, 24, 0.05) 20%,
+                    rgba(30, 77, 24, 0.50) 75%,
+                    rgba(30, 77, 24, 0.80) 100%);
+        }
+
+        .product-img-overlay .overlay-cat {
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 4px;
+        }
+        .product-img-overlay .overlay-name {
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #fff;
+            line-height: 1.2;
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+            margin-bottom: 6px;
+        }
+        .product-img-overlay .overlay-price {
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--gold-light);
+            text-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
+        }
+        .product-img-overlay .overlay-tag {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(6px);
+            padding: 4px 14px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--green-deep);
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+        /* petit élément décoratif : cercle */
+        .product-img .deco-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.06);
+            pointer-events: none;
+            z-index: 1;
+        }
+        .product-img .deco-circle.c1 {
+            width: 120px;
+            height: 120px;
+            top: -30px;
+            right: -20px;
+        }
+        .product-img .deco-circle.c2 {
+            width: 80px;
+            height: 80px;
+            bottom: -10px;
+            left: -20px;
+            background: rgba(255, 255, 255, 0.04);
+        }
+        .product-img .deco-line {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.07);
+            pointer-events: none;
+            z-index: 1;
+            border-radius: 2px;
+        }
+        .product-img .deco-line.l1 {
+            width: 60%;
+            height: 2px;
+            top: 30%;
+            right: -10%;
+            transform: rotate(-12deg);
+        }
+        .product-img .deco-line.l2 {
+            width: 40%;
+            height: 2px;
+            bottom: 35%;
+            left: -8%;
+            transform: rotate(8deg);
+        }
+
+        /* ── corps produit ── */
+        .product-body {
+            padding: 18px 22px 10px;
+        }
+        .product-category {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--green-mid);
+            margin-bottom: 4px;
+        }
+        .product-name {
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--charcoal);
+            margin-bottom: 6px;
+        }
+        .product-desc {
+            font-size: 0.85rem;
+            color: var(--grey);
+            line-height: 1.6;
+            margin-bottom: 14px;
+        }
+        .flavor-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--charcoal);
+            margin-bottom: 8px;
+        }
+        .flavors {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+        .flavor-chip {
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1.5px solid var(--green-light);
+            color: var(--green-deep);
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .flavor-chip:hover,
+        .flavor-chip.selected {
+            background: var(--green-deep);
+            border-color: var(--green-deep);
+            color: var(--white);
+        }
+
+        /* ── footer produit ── */
+        .product-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 22px 18px;
+            border-top: 1px solid var(--green-light);
+            background: var(--sage);
+        }
+        .product-price {
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: var(--green-deep);
+        }
+        .add-btn {
+            background: var(--green-deep);
+            color: var(--white);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all var(--transition);
+        }
+        .add-btn:hover {
+            background: var(--green-mid);
+            transform: scale(1.05);
+            box-shadow: 0 4px 14px rgba(30, 77, 24, 0.25);
+        }
+
+        /* ── ABOUT ── */
+        .about-hero {
+            min-height: 55vh;
+            display: flex;
+            align-items: center;
+            padding: 140px 32px 80px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--green-deep) 0%, #2A6823 100%);
+        }
+        .about-hero-bg-img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.18;
+            mix-blend-mode: luminosity;
+        }
+        .about-hero::before {
+            content: '🐼';
+            position: absolute;
+            right: 5%;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: clamp(120px, 20vw, 220px);
+            opacity: 0.1;
+            pointer-events: none;
+        }
+        .about-hero-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        .about-hero h1 {
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: clamp(2.2rem, 5vw, 4rem);
+            color: var(--white);
+            letter-spacing: -1px;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+        .about-hero p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+            max-width: 560px;
+            line-height: 1.8;
+        }
+        .about-story {
+            padding: 100px 32px;
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+        .about-story-img {
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            aspect-ratio: 4/3;
+            position: relative;
+            box-shadow: var(--shadow-card);
+        }
+        .about-story-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .about-story-img-fallback {
+            background: linear-gradient(135deg, var(--sage), var(--green-light));
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 6rem;
+        }
+        .about-story h2 {
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 2rem;
+            color: var(--charcoal);
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+        .about-story p {
+            color: var(--grey);
+            line-height: 1.9;
+            margin-bottom: 16px;
+            font-size: 0.97rem;
+        }
+        .values-strip {
+            background: var(--sage);
+            padding: 80px 32px;
+        }
+        .values-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            margin-top: 48px;
+        }
+        .value-card {
+            background: var(--white);
+            border-radius: var(--radius-md);
+            padding: 36px 28px;
+            transition: all var(--transition);
+            border: 1.5px solid transparent;
+        }
+        .value-card:hover {
+            box-shadow: var(--shadow-card);
+            border-color: var(--green-light);
+            transform: translateY(-4px);
+        }
+        .value-icon-wrap {
+            width: 56px;
+            height: 56px;
+            border-radius: var(--radius-sm);
+            background: var(--sage);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+        .value-card h3 {
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: var(--charcoal);
+            margin-bottom: 10px;
+        }
+        .value-card p {
+            font-size: 0.9rem;
+            color: var(--grey);
+            line-height: 1.7;
+        }
+        .team {
+            padding: 100px 32px;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        /* ── TEAM CARD (SINGLE) ── */
+        .team-card {
+            text-align: center;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            transition: all var(--transition);
+            border: 1.5px solid var(--green-light);
+            background: var(--white);
+        }
+        .team-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-card);
+            border-color: var(--green-mid);
+        }
+        .team-avatar {
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+        .team-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top;
+            transition: transform 0.5s ease;
+        }
+        .team-card:hover .team-avatar img {
+            transform: scale(1.05);
+        }
+        .team-avatar-fallback {
+            background: linear-gradient(135deg, var(--green-light), var(--sage));
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+        .team-info {
+            padding: 18px 16px;
+            background: var(--white);
+        }
+        .team-name {
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--charcoal);
+        }
+        .team-role {
+            font-size: 0.82rem;
+            color: var(--grey);
+            margin-top: 4px;
+        }
+
+        /* ── QUALITÉ ── */
+        .qualite-hero {
+            min-height: 50vh;
+            background: linear-gradient(135deg, var(--green-deep) 0%, #2A6823 100%);
+            display: flex;
+            align-items: center;
+            padding: 140px 32px 60px;
+            position: relative;
+            overflow: hidden;
+        }
+        .qualite-hero::after {
+            content: '✨';
+            position: absolute;
+            right: 8%;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: clamp(100px, 18vw, 200px);
+            opacity: 0.1;
+            pointer-events: none;
+        }
+        .qualite-hero-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        .qualite-hero h1 {
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: clamp(2.2rem, 5vw, 3.8rem);
+            color: var(--white);
+            letter-spacing: -1px;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+        .qualite-hero p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+            max-width: 520px;
+            line-height: 1.8;
+        }
+        .pillars-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            margin-top: 48px;
+        }
+        .pillar-card {
+            display: flex;
+            gap: 24px;
+            padding: 36px;
+            border: 1.5px solid var(--green-light);
+            border-radius: var(--radius-md);
+            align-items: flex-start;
+            transition: all var(--transition);
+        }
+        .pillar-card:hover {
+            box-shadow: var(--shadow-soft);
+            border-color: var(--green-mid);
+            transform: translateY(-4px);
+        }
+        .pillar-icon-wrap {
+            width: 60px;
+            height: 60px;
+            background: var(--sage);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+        .pillar-card h3 {
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--charcoal);
+            margin-bottom: 8px;
+        }
+        .pillar-card p {
+            font-size: 0.9rem;
+            color: var(--grey);
+            line-height: 1.7;
+        }
+        .qualite-numbers {
+            background: linear-gradient(135deg, var(--green-deep) 0%, #2A6823 100%);
+            padding: 100px 32px;
+        }
+        .qualite-numbers-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+            text-align: center;
+        }
+        .q-num-value {
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 3rem;
+            color: var(--white);
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+        .q-num-label {
+            font-size: 0.88rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.5;
+        }
+
+        /* ── CONTACT ── */
+        .contact-page {
+            padding-top: 72px;
+            min-height: 100vh;
+            background: var(--white);
+        }
+        .contact-header {
+            background: linear-gradient(135deg, var(--sage), var(--green-light));
+            padding: 80px 32px 60px;
+            text-align: center;
+        }
+        .contact-grid {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 80px 32px 100px;
+            display: grid;
+            grid-template-columns: 1fr 1.4fr;
+            gap: 60px;
+            align-items: start;
+        }
+        .contact-info h3 {
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: var(--charcoal);
+            margin-bottom: 24px;
+        }
+        .contact-item {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+            margin-bottom: 28px;
+        }
+        .contact-icon-box {
+            width: 48px;
+            height: 48px;
+            background: var(--green-light);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+        .contact-item-text strong {
+            display: block;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            color: var(--charcoal);
+            margin-bottom: 2px;
+        }
+        .contact-item-text span {
+            font-size: 0.9rem;
+            color: var(--grey);
+        }
+        .contact-socials {
+            display: flex;
+            gap: 12px;
+            margin-top: 36px;
+        }
+        .social-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--sage);
+            border: 1.5px solid var(--green-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+        .social-btn:hover {
+            background: var(--green-deep);
+            border-color: var(--green-deep);
+            transform: translateY(-3px);
+        }
+        .contact-form-card {
+            background: var(--white);
+            border: 1.5px solid var(--green-light);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            box-shadow: var(--shadow-soft);
+        }
+        .contact-form-card h3 {
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: var(--charcoal);
+            margin-bottom: 28px;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--charcoal);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid var(--grey-light);
+            border-radius: var(--radius-sm);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            color: var(--charcoal);
+            background: var(--white);
+            transition: border-color var(--transition), box-shadow var(--transition);
+            outline: none;
+            -webkit-appearance: none;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: var(--green-mid);
+            box-shadow: 0 0 0 3px rgba(62, 122, 53, 0.12);
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 130px;
+        }
+        .form-submit {
+            background: linear-gradient(135deg, var(--green-deep), var(--green-mid));
+            color: var(--white);
+            border: none;
+            padding: 16px 36px;
+            border-radius: 50px;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all var(--transition);
+        }
+        .form-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(30, 77, 24, 0.3);
+            filter: brightness(1.07);
+        }
+        .form-success {
+            display: none;
+            text-align: center;
+            padding: 32px;
+            color: var(--green-deep);
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        .form-success .success-icon {
+            font-size: 3rem;
+            margin-bottom: 12px;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            background: var(--charcoal);
+            color: var(--white);
+            padding: 80px 32px 40px;
+        }
+        .footer-grid {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 60px;
+            padding-bottom: 60px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 40px;
+        }
+        .footer-brand p {
+            font-size: 0.9rem;
+            opacity: 0.6;
+            line-height: 1.8;
+            margin-top: 16px;
+            max-width: 280px;
+        }
+        .footer-logo-text {
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 1.6rem;
+            color: var(--white);
+        }
+        .footer-logo-icon {
+            width: 38px;
+            height: 38px;
+            background: var(--green-mid);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+            font-size: 18px;
+        }
+        .footer-col h4 {
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.5;
+            margin-bottom: 20px;
+        }
+        .footer-col ul {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .footer-col ul li {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            cursor: pointer;
+            transition: opacity var(--transition);
+        }
+        .footer-col ul li:hover {
+            opacity: 1;
+        }
+        .footer-bottom {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.82rem;
+            opacity: 0.5;
+        }
+        .newsletter-form {
+            display: flex;
+            gap: 8px;
+            margin-top: 24px;
+        }
+        .newsletter-input {
+            flex: 1;
+            padding: 10px 16px;
+            border-radius: 50px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.88rem;
+            outline: none;
+        }
+        .newsletter-input::placeholder {
+            opacity: 0.5;
+        }
+        .newsletter-input:focus {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .newsletter-submit {
+            background: var(--green-mid);
+            color: var(--white);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: all var(--transition);
+            white-space: nowrap;
+        }
+        .newsletter-submit:hover {
+            background: var(--green-deep);
+            transform: scale(1.03);
+        }
+
+        /* ── TOAST ── */
+        .toast {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            background: var(--green-deep);
+            color: var(--white);
+            padding: 14px 24px;
+            border-radius: var(--radius-sm);
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            transform: translateY(120px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 999;
+        }
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* ── REVEAL ── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(32px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .reveal.in-view {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal:nth-child(2) {
+            transition-delay: 0.1s;
+        }
+        .reveal:nth-child(3) {
+            transition-delay: 0.2s;
+        }
+        .reveal:nth-child(4) {
+            transition-delay: 0.3s;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width:1024px) {
+            .hero-inner {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                text-align: center;
+            }
+            .hero-subtitle {
+                margin: 0 auto 40px;
+            }
+            .hero-actions {
+                justify-content: center;
+            }
+            .hero-visual {
+                display: none;
+            }
+            .hero-stats {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .why-inner {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .preview-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .promise-inner {
+                grid-template-columns: 1fr;
+            }
+            .promise-visual {
+                display: none;
+            }
+            .testi-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .about-story {
+                grid-template-columns: 1fr;
+            }
+            .about-story-img {
+                aspect-ratio: 16/7;
+            }
+            .values-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+            .pillars-grid {
+                grid-template-columns: 1fr;
+            }
+            .qualite-numbers-inner {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 40px;
+            }
+        }
+        @media (max-width:768px) {
+            .nav-links {
+                display: none;
+            }
+            .burger {
+                display: flex;
+            }
+            .hero-stats {
+                grid-template-columns: 1fr;
+            }
+            .why-inner {
+                grid-template-columns: 1fr;
+            }
+            .preview-grid {
+                grid-template-columns: 1fr;
+            }
+            .testi-grid {
+                grid-template-columns: 1fr;
+            }
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+            .footer-bottom {
+                flex-direction: column;
+                gap: 8px;
+                text-align: center;
+            }
+            .section {
+                padding: 60px 20px;
+            }
+            .products-section {
+                padding: 40px 20px 60px;
+            }
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+            .product-img {
+                height: 200px;
+            }
+            .team-card {
+                max-width: 280px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Scroll progress -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- NAV -->
+    <nav id="mainNav">
+        <div class="nav-inner">
+            <div class="logo" onclick="showPage('home')">
+                <div class="logo-icon">🐼</div>
+                <div>
+                    <span class="logo-text">Panda</span>
+                    <span class="logo-sub">Propreté Efficace</span>
+                </div>
+            </div>
+            <ul class="nav-links">
+                <li class="nav-link active" onclick="showPage('home',this)">Accueil</li>
+                <li class="nav-link" onclick="showPage('products',this)">Produits</li>
+                <li class="nav-link" onclick="showPage('about',this)">À Propos</li>
+                <li class="nav-link" onclick="showPage('qualite',this)">Qualité & Prix</li>
+                <li class="nav-link nav-cta" onclick="showPage('contact',this)">Contact</li>
+            </ul>
+            <div class="burger" onclick="toggleMobile()"><span></span><span></span><span></span></div>
+        </div>
+    </nav>
+    <div class="mobile-menu" id="mobileMenu">
+        <span class="nav-link" onclick="showPage('home');toggleMobile()">🏠 Accueil</span>
+        <span class="nav-link" onclick="showPage('products');toggleMobile()">🛒 Produits</span>
+        <span class="nav-link" onclick="showPage('about');toggleMobile()">🐼 À Propos</span>
+        <span class="nav-link" onclick="showPage('qualite');toggleMobile()">✨ Qualité & Prix</span>
+        <span class="nav-link" onclick="showPage('contact');toggleMobile()">✉️ Contact</span>
+    </div>
+
+    <div class="toast" id="toast">✅ Ajouté à votre sélection !</div>
+
+    <!-- ═══════════════════ PAGE ACCUEIL ═══════════════════ -->
+    <div class="page active" id="page-home">
+
+        <section class="hero">
+            <div class="hero-deco">
+                <div class="bubble"></div>
+                <div class="bubble"></div>
+                <div class="bubble"></div>
+                <div class="bubble"></div>
+                <div class="bubble"></div>
+                <span class="sparkle" style="font-size:14px;top:20%;left:20%;animation-delay:0s;"></span>
+                <span class="sparkle" style="font-size:10px;top:60%;left:45%;animation-delay:1.5s;"></span>
+                <span class="sparkle" style="font-size:16px;top:30%;right:25%;animation-delay:3s;"></span>
+                <span class="sparkle" style="font-size:12px;bottom:25%;left:60%;animation-delay:2s;"></span>
+            </div>
+            <div style="width:100%;">
+                <div class="hero-inner">
+                    <div class="hero-content">
+                        <div class="hero-badge">✨ Efficacité garantie — Prix imbattables</div>
+                        <h1 class="hero-title">La propreté<br>qui <span class="gradient-text">s'impose</span><br>partout</h1>
+                        <p class="hero-subtitle">Des produits ménagers puissants, fiables et accessibles. Panda nettoie vraiment, à des prix que tout le monde peut se permettre.</p>
+                        <div class="hero-actions">
+                            <button class="btn-primary" onclick="showPage('products')">Découvrir nos produits →</button>
+                            <button class="btn-secondary" onclick="showPage('about')">Notre histoire</button>
+                        </div>
+                    </div>
+                    <div class="hero-visual">
+                        <div class="hero-mosaic">
+                            <img class="mosaic-img m1" src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=480&h=380&q=80&fit=crop" alt="Cuisine propre" onerror="this.style.display='none'">
+                            <img class="mosaic-img m2" src="https://images.unsplash.com/photo-1545173168-9f1947eebb7f?w=320&h=185&q=80&fit=crop" alt="Linge propre" onerror="this.style.display='none'">
+                            <img class="mosaic-img m3" src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=320&h=185&q=80&fit=crop" alt="Nettoyage" onerror="this.style.display='none'">
+                            <div class="mosaic-panda-chip">🐼 Panda — Propreté Efficace</div>
+                        </div>
+                        <div class="hero-tag hero-tag-1"><span>💪</span> Efficacité prouvée</div>
+                        <div class="hero-tag hero-tag-2"><span>💸</span> Dès 0,50 €</div>
+                    </div>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-number" data-target="50000" data-suffix="+">50 000+</div>
+                        <div class="stat-label">Foyers qui nous font confiance</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">5 gammes</div>
+                        <div class="stat-label">Produits pour chaque besoin</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">dès 0,50€</div>
+                        <div class="stat-label">La propreté accessible à tous</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- WAVE -->
+        <div class="wave-divider" style="background:#F7FAF4;">
+            <svg viewBox="0 0 1440 80" preserveAspectRatio="none" fill="#1E4D18" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0,40 C360,0 720,80 1080,40 C1260,20 1380,50 1440,40 L1440,80 L0,80 Z" opacity="0.1"/>
+                <path d="M0,55 C300,15 600,75 900,50 C1100,35 1300,60 1440,50 L1440,80 L0,80 Z" opacity="0.07"/>
+            </svg>
+        </div>
+
+        <div class="why-strip">
+            <div class="why-inner">
+                <div class="why-card reveal">
+                    <div class="why-icon-wrap">💪</div>
+                    <h3>Efficacité réelle</h3>
+                    <p>Nos formules sont conçues pour agir vite et bien sur les taches, odeurs et saletés du quotidien.</p>
+                </div>
+                <div class="why-card reveal">
+                    <div class="why-icon-wrap">💸</div>
+                    <h3>Prix imbattables</h3>
+                    <p>Parce qu'un foyer propre ne devrait pas coûter cher. Dès 0,50 € le produit, sans compromis.</p>
+                </div>
+                <div class="why-card reveal">
+                    <div class="why-icon-wrap">🌈</div>
+                    <h3>Large choix de parfums</h3>
+                    <p>Lavande, pin, citron, sakura… Choisissez la senteur qui correspond à votre intérieur.</p>
+                </div>
+                <div class="why-card reveal">
+                    <div class="why-icon-wrap">🛡️</div>
+                    <h3>Qualité contrôlée</h3>
+                    <p>Chaque produit passe par un contrôle qualité rigoureux avant d'arriver dans votre foyer.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Aperçu produits -->
+        <div style="background:var(--white);">
+            <div class="section">
+                <div class="section-eyebrow">Nos produits</div>
+                <h2 class="section-title">Les favoris de nos clients</h2>
+                <p class="section-desc">Découvrez une sélection de nos produits les plus appréciés, à des prix accessibles pour toute la famille.</p>
+                <div class="preview-grid">
+                    <div class="preview-card reveal" onclick="showPage('products')">
+                        <div class="preview-img">
+                            <img src="https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcRYZHaJQjGfh64G-uCTfNGcRrFY6T1wcxOkeEW8JUvutBBKFelAYQ9ZDHATjVXD76L27bI0uQPrOn7Jnml_5VBPALyobWNW5bp2glkswYGGVfsKj8YjlWCRVKI" alt="Lessive Panda Marseille" onerror="this.style.display='none'">
+                            <span class="fallback-emoji">🧺</span>
+                            <div class="preview-img-overlay"><button class="preview-overlay-btn">Voir le produit →</button></div>
+                        </div>
+                        <div class="preview-body">
+                            <div class="preview-cat">Lessive</div>
+                            <div class="preview-name">Lessive Panda Marseille 3L</div>
+                            <div class="preview-price">2,99 €</div>
+                        </div>
+                    </div>
+                    <div class="preview-card reveal" onclick="showPage('products')">
+                        <div class="preview-img">
+                            <img src="" alt="Nettoyant Multi-Usages" onerror="this.style.display='none'">
+                            <span class="fallback-emoji">✨</span>
+                            <div class="preview-img-overlay"><button class="preview-overlay-btn">Voir le produit →</button></div>
+                        </div>
+                        <div class="preview-body">
+                            <div class="preview-cat">Nettoyant</div>
+                            <div class="preview-name">Nettoyant Multi-Usages 1L</div>
+                            <div class="preview-price">0,50 €</div>
+                        </div>
+                    </div>
+                    <div class="preview-card reveal" onclick="showPage('products')">
+                        <div class="preview-img">
+                            <img src="https://ogbaygroup.be/cdn/shop/files/WhatsApp_Image_2026-03-02_at_14.06.17.jpg?v=1772457008&width=1200" alt="Parfums d'intérieur" onerror="this.style.display='none'">
+                            <span class="fallback-emoji">🌸</span>
+                            <div class="preview-img-overlay"><button class="preview-overlay-btn">Voir le produit →</button></div>
+                        </div>
+                        <div class="preview-body">
+                            <div class="preview-cat">Parfums</div>
+                            <div class="preview-name">Parfums d'Intérieur Panda</div>
+                            <div class="preview-price">1,00 €</div>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align:center;">
+                    <button class="btn-primary" onclick="showPage('products')">Voir tous les produits →</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="promise">
+            <div class="promise-inner">
+                <div>
+                    <div class="section-eyebrow">Notre promesse</div>
+                    <h2 class="section-title">L'efficacité au cœur de chaque flacon</h2>
+                    <div class="promise-list">
+                        <div class="promise-item reveal">
+                            <div class="promise-bullet">💪</div>
+                            <div>
+                                <h4>Formules concentrées et puissantes</h4>
+                                <p>Chaque produit Panda est formulé pour être efficace dès la première utilisation. Taches, odeurs, calcaire — rien ne résiste.</p>
+                            </div>
+                        </div>
+                        <div class="promise-item reveal">
+                            <div class="promise-bullet">🧪</div>
+                            <div>
+                                <h4>Testés et validés</h4>
+                                <p>Nos produits sont rigoureusement testés avant commercialisation pour garantir leur efficacité et leur sécurité d'utilisation.</p>
+                            </div>
+                        </div>
+                        <div class="promise-item reveal">
+                            <div class="promise-bullet">💸</div>
+                            <div>
+                                <h4>Le meilleur rapport qualité/prix</h4>
+                                <p>Chez Panda, on ne vous fait pas payer pour un emballage luxueux. L'argent est dans la formule, pas dans le marketing.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="promise-visual">
+                    <div class="promise-rings">
+                        <div class="ring"></div>
+                        <div class="ring"></div>
+                        <div class="ring"></div>
+                        <div class="ring-center">🐼</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="background:var(--sage);">
+            <div class="section">
+                <div class="section-eyebrow">Témoignages</div>
+                <h2 class="section-title">Ils ont adopté Panda</h2>
+                <p class="section-desc">Des milliers de familles font confiance à Panda chaque jour pour un foyer propre.</p>
+                <div class="testi-grid">
+                    <div class="testi-card reveal">
+                        <div class="testi-stars">★★★★★</div>
+                        <p class="testi-text">La lessive Marseille lave vraiment bien, le linge ressort impeccable. Et le prix… franchement imbattable !</p>
+                        <div class="testi-author">
+                            <div class="testi-avatar">
+                                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&h=100&q=80&fit=crop&crop=faces" alt="Marie" onerror="this.style.display='none';this.parentElement.textContent='👩'">
+                            </div>
+                            <div>
+                                <div class="testi-name">Marie L.</div>
+                                <div class="testi-loc">Lyon</div>
+                                <div class="testi-verified">✔ Achat vérifié</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testi-card reveal">
+                        <div class="testi-stars">★★★★★</div>
+                        <p class="testi-text">Le nettoyant multi-usages citron est redoutable. Toutes mes surfaces brillent, et pour 50 centimes, c'est incroyable.</p>
+                        <div class="testi-author">
+                            <div class="testi-avatar">
+                                <img src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=100&h=100&q=80&fit=crop&crop=faces" alt="Thomas" onerror="this.style.display='none';this.parentElement.textContent='👨'">
+                            </div>
+                            <div>
+                                <div class="testi-name">Thomas B.</div>
+                                <div class="testi-loc">Bordeaux</div>
+                                <div class="testi-verified">✔ Achat vérifié</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testi-card reveal">
+                        <div class="testi-stars">★★★★★</div>
+                        <p class="testi-text">Les parfums d'intérieur durent vraiment longtemps. Ma maison sent bon toute la semaine avec une seule utilisation.</p>
+                        <div class="testi-author">
+                            <div class="testi-avatar">
+                                <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100&h=100&q=80&fit=crop&crop=faces" alt="Isabelle" onerror="this.style.display='none';this.parentElement.textContent='👩'">
+                            </div>
+                            <div>
+                                <div class="testi-name">Isabelle M.</div>
+                                <div class="testi-loc">Paris</div>
+                                <div class="testi-verified">✔ Achat vérifié</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ═══════════════════ PAGE PRODUITS ═══════════════════ -->
+    <div class="page" id="page-products">
+        <div style="padding-top:72px;">
+            <div class="products-hero">
+                <div class="section-eyebrow" style="justify-content:center;">Catalogue complet</div>
+                <h1 class="hero-title">Tous nos produits</h1>
+                <p class="hero-subtitle" style="margin:0 auto;">Des produits puissants pour chaque recoin de votre foyer, à des prix accessibles pour tous.</p>
+            </div>
+
+            <div class="filter-bar">
+                <div class="filter-inner">
+                    <button class="filter-btn active" onclick="filterProducts('all',this)">Tous</button>
+                    <button class="filter-btn" onclick="filterProducts('lessive',this)">🧺 Lessives</button>
+                    <button class="filter-btn" onclick="filterProducts('nettoyant',this)">✨ Nettoyants</button>
+                    <button class="filter-btn" onclick="filterProducts('papier',this)">📦 Papier</button>
+                    <button class="filter-btn" onclick="filterProducts('parfum',this)">🌸 Parfums</button>
+                </div>
+            </div>
+
+            <div class="products-section">
+                <div class="products-grid" id="productsGrid">
+
+                    <!-- ── Lessive Marseille ── -->
+                    <div class="product-card" data-cat="lessive">
+                        <div class="product-badge">Bestseller</div>
+                        <div class="product-img">
+                            <img src="https://ogbaygroup.be/cdn/shop/files/mystic_b6fb0022-3f98-4c85-b31d-396cf64df257.png?v=1769430800&width=1200" alt="Lessive Panda Marseille" onerror="this.style.display='none'">
+                            <div class="deco-circle c1"></div>
+                            <div class="deco-line l1"></div>
+                            <div class="product-img-overlay">
+                                <div class="overlay-cat">🧺 Lessive</div>
+                                <div class="overlay-name">Lessive Panda Marseille</div>
+                                <div class="overlay-price">2,99 €</div>
+                                <div class="overlay-tag">⭐ Bestseller</div>
+                            </div>
+                        </div>
+                        <div class="product-body">
+                            <div class="product-category">Lessive</div>
+                            <div class="product-name">Lessive Panda Marseille</div>
+                            <p class="product-desc">Lessive liquide au parfum savon de Marseille. Détache efficacement et protège les fibres. Bidon 3 L.</p>
+                        </div>
+                        <div class="product-footer">
+                            <div class="product-price">2,99 €</div>
+                            <button class="add-btn" onclick="addToast()">+ Sélectionner</button>
+                        </div>
+                    </div>
+
+                    <!-- ── Lessive Mystic ── -->
+                    <div class="product-card" data-cat="lessive">
+                        <div class="product-img">
+                            <img src="https://ogbaygroup.be/cdn/shop/files/marseillepanda.png?v=1769430694&width=1200" alt="Lessive Panda Mystic" onerror="this.style.display='none'">
+                            <div class="deco-circle c2"></div>
+                            <div class="deco-line l2"></div>
+                            <div class="product-img-overlay">
+                                <div class="overlay-cat">🧺 Lessive</div>
+                                <div class="overlay-name">Lessive Panda Mystic</div>
+                                <div class="overlay-price">2,99 €</div>
+                                <div class="overlay-tag">✨ Fraîcheur</div>
+                            </div>
+                        </div>
+                        <div class="product-body">
+                            <div class="product-category">Lessive</div>
+                            <div class="product-name">Lessive Panda Mystic</div>
+                            <p class="product-desc">Lessive au parfum enveloppant et mystérieux. Efficace contre les taches du quotidien, linge frais dès 30°. Bidon 3 L.</p>
+                        </div>
+                        <div class="product-footer">
+                            <div class="product-price">2,99 €</div>
+                            <button class="add-btn" onclick="addToast()">+ Sélectionner</button>
+                        </div>
+                    </div>
+
+                    <!-- ── Nettoyant Multi-Usages ── -->
+                    <div class="product-card" data-cat="nettoyant">
+                        <div class="product-badge promo">4 parfums</div>
+                        <div class="product-img">
+                            <img src="" alt="Nettoyant Multi-Usages" onerror="this.style.display='none'">
+                            <div class="deco-circle c1"></div>
+                            <div class="product-img-overlay">
+                                <div class="overlay-cat">✨ Nettoyant</div>
+                                <div class="overlay-name">Multi-Usages 1L</div>
+                                <div class="overlay-price">0,50 €</div>
+                                <div class="overlay-tag">⭐ 4 parfums</div>
+                            </div>
+                        </div>
+                        <div class="product-body">
+                            <div class="product-category">Nettoyant</div>
+                            <div class="product-name">Nettoyant Panda Multi-Usages 1L</div>
+                            <p class="product-desc">Nettoie et désinfecte toutes vos surfaces : cuisine, salle de bain, sols. Formule puissante, action rapide.</p>
+                            <div class="flavor-label">Choisir votre parfum :</div>
+                            <div class="flavors">
+                                <span class="flavor-chip selected" onclick="selectFlavor(this)">🌿 Lavande</span>
+                                <span class="flavor-chip" onclick="selectFlavor(this)">🌲 Pin</span>
+                                <span class="flavor-chip" onclick="selectFlavor(this)">🍋 Citron</span>
+                                <span class="flavor-chip" onclick="selectFlavor(this)">🫧 Marseille</span>
+                            </div>
+                        </div>
+                        <div class="product-footer">
+                            <div class="product-price">0,50 €</div>
+                            <button class="add-btn" onclick="addToast()">+ Sélectionner</button>
+                        </div>
+                    </div>
+
+                    <!-- ── Pack Papier ── -->
+                    <div class="product-card" data-cat="papier">
+                        <div class="product-badge">Pack</div>
+                        <div class="product-img">
+                            <img src="https://www.stokomani.fr/cdn/shop/files/optimized_695636eb04683_2026-01-01_08-57-15.jpg?v=1767257838&width=620" alt="rouleau essuie-tout" onerror="this.style.display='none'">
+                            <div class="deco-circle c2"></div>
+                            <div class="deco-line l1"></div>
+                            <div class="product-img-overlay">
+                                <div class="overlay-cat">📦 Papier</div>
+                                <div class="overlay-name">Rouleaux essuie-tout panda bleu</div>
+                                <div class="overlay-price">1,99 €</div>
+                                <div class="overlay-tag">📦 Économique</div>
+                            </div>
+                        </div>
+                        <div class="product-body">
+                            <div class="product-category">Papier</div>
+                            <div class="product-name">rouleau essuie-tout panda bleu</div>
+                            <p class="product-desc">rouleaux ultra-résistants et très absorbants. Idéal pour essuyer, nettoyer et sécher dans toutes les pièces.</p>
+                        </div>
+                        <div class="product-footer">
+                            <div class="product-price">1,99 €</div>
+                            <button class="add-btn" onclick="addToast()">+ Sélectionner</button>
+                        </div>
+                    </div>
+
+                    <!-- ── Parfums d'intérieur ── -->
+                    <div class="product-card" data-cat="parfum">
+                        <div class="product-badge promo">5 senteurs</div>
+                        <div class="product-img">
+                            <img src="https://www.stokomani.fr/cdn/shop/files/optimized_6943c3a9e2f67_2025-12-18_09-04-41.jpg?v=1766048685&width=355" alt="Parfums d'intérieur Panda" onerror="this.style.display='none'">
+                            <div class="deco-circle c1"></div>
+                            <div class="deco-line l2"></div>
+                            <div class="product-img-overlay">
+                                <div class="overlay-cat">🌸 Parfum</div>
+                                <div class="overlay-name">Parfums d'Intérieur</div>
+                                <div class="overlay-price">1,00 €</div>
+                                <div class="overlay-tag">🌸 5 senteurs</div>
+                            </div>
+                        </div>
+                        <div class="product-body">
+                            <div class="product-category">Parfums d'Intérieur</div>
+                            <div class="product-name">Parfums d'Intérieur Panda</div>
+                            <p class="product-desc">Diffuse une fragrance longue durée dans toutes vos pièces. Tenue garantie plusieurs jours. 5 senteurs exclusives.</p>
+                            <div class="flavor-label">Choisir votre senteur :</div>
+                            <div class="flavors">
+                                <span class="flavor-chip selected" onclick="selectFlavor(this)">🌸 Fleur de Coton</span>
+                                <span class="flavor-chip" onclick="selectFlavor(this)">🌸 Sakura</span>
+                                <span class="flavor-chip" onclick="selectFlavor(this)">🪷 Lotus</span>
+                                <span class="flavor-chip" onclick="selectFlavor(this)">🌑 Ombre Intense</span>
+                                <span class="flavor-chip" onclick="selectFlavor(this)">🌹 Rose Indienne</span>
+                            </div>
+                        </div>
+                        <div class="product-footer">
+                            <div class="product-price">1,00 €</div>
+                            <button class="add-btn" onclick="addToast()">+ Sélectionner</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════ PAGE À PROPOS ═══════════════════ -->
+    <div class="page" id="page-about">
+
+        <div class="about-hero">
+            <img class="about-hero-bg-img" src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=1600&h=600&q=60&fit=crop" alt="Nettoyage maison" onerror="this.remove()">
+            <div class="about-hero-inner">
+                <p class="section-eyebrow" style="color:rgba(255,255,255,0.7);">Notre Histoire</p>
+                <h1>Une marque née<br>pour rendre la propreté<br>accessible à tous</h1>
+                <p>Fondée avec la conviction que nettoyer efficacement son foyer ne devrait pas coûter une fortune.</p>
+            </div>
+        </div>
+
+        <div class="about-story">
+            <div>
+                <div class="section-eyebrow">Nos débuts</div>
+                <h2>Nés d'un constat simple, devenus une référence</h2>
+                <p>Panda est née d'un constat évident : les produits ménagers efficaces coûtaient souvent trop cher, et les moins chers ne nettoyaient pas vraiment. On a décidé de changer ça.</p>
+                <p>En investissant dans la formule plutôt que dans le packaging ou la publicité, on a pu proposer des produits réellement performants à des prix que tout le monde peut se permettre.</p>
+                <p>Le panda, symbole de force tranquille, incarne ce qu'on veut être : un produit discret, robuste, et sur lequel on peut compter au quotidien.</p>
+                <div style="margin-top:32px;">
+                    <button class="btn-primary" onclick="showPage('qualite')">Nos engagements qualité →</button>
+                </div>
+            </div>
+            <div class="about-story-img">
+                <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=700&h=520&q=80&fit=crop" alt="Nettoyage maison" onerror="this.parentElement.innerHTML='<div class=\'about-story-img-fallback\'>🐼</div>'">
+            </div>
+        </div>
+
+        <div class="values-strip">
+            <div class="values-inner">
+                <div class="section-eyebrow">Ce qui nous guide</div>
+                <h2 class="section-title">Nos valeurs</h2>
+                <div class="values-grid">
+                    <div class="value-card reveal">
+                        <div class="value-icon-wrap">💪</div>
+                        <h3>Efficacité avant tout</h3>
+                        <p>On ne fait pas de compromis sur la performance. Si un produit Panda ne nettoie pas bien, il ne sort pas.</p>
+                    </div>
+                    <div class="value-card reveal">
+                        <div class="value-icon-wrap">💸</div>
+                        <h3>Prix honnêtes</h3>
+                        <p>On refuse de vous facturer une marque ou un packaging. Le prix reflète le produit, rien de plus.</p>
+                    </div>
+                    <div class="value-card reveal">
+                        <div class="value-icon-wrap">🛡️</div>
+                        <h3>Fiabilité</h3>
+                        <p>Chaque lot est contrôlé. Vous avez le même produit, avec la même qualité, à chaque achat.</p>
+                    </div>
+                    <div class="value-card reveal">
+                        <div class="value-icon-wrap">🌈</div>
+                        <h3>Choix & Plaisir</h3>
+                        <p>Nettoyer c'est mieux quand ça sent bon. On propose des parfums variés pour que ménage rime avec plaisir.</p>
+                    </div>
+                    <div class="value-card reveal">
+                        <div class="value-icon-wrap">🤝</div>
+                        <h3>Accessibilité</h3>
+                        <p>Un foyer propre c'est un droit, pas un luxe. C'est pourquoi nos prix restent parmi les plus bas du marché.</p>
+                    </div>
+                    <div class="value-card reveal">
+                        <div class="value-icon-wrap">📦</div>
+                        <h3>Disponibilité</h3>
+                        <p>Nos produits doivent être faciles à trouver et à commander. Pas de ruptures, pas de complications.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ ÉQUIPE — UNIQUEMENT SOUFYANE DERDOUR ═══ -->
+        <div class="team">
+            <div class="section-eyebrow">L'équipe</div>
+            <h2 class="section-title">Le visage derrière Panda</h2>
+            <div style="display:flex;justify-content:center;margin-top:48px;">
+                <div class="team-card reveal" style="max-width:300px;width:100%;">
+                    <div class="team-avatar">
+                        <!-- ⬇️ REMPLACEZ src AVEC VOTRE PROPRE IMAGE ⬇️ -->
+                        <img src="https://via.placeholder.com/300x240/3E7A35/FFFFFF?text=Soufyane+Derdour" alt="Soufyane Derdour" onerror="this.style.display='none';this.parentElement.innerHTML='<div class=\'team-avatar-fallback\'>🐼</div>'">
+                    </div>
+                    <div class="team-info">
+                        <div class="team-name">Soufyane Derdour</div>
+                        <div class="team-role">Fondateur & Visionnaire</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ═══════════════════ PAGE QUALITÉ & PRIX ═══════════════════ -->
+    <div class="page" id="page-qualite">
+
+        <div class="qualite-hero">
+            <div class="qualite-hero-inner">
+                <p class="section-eyebrow" style="color:rgba(255,255,255,0.7);">Notre engagement</p>
+                <h1>Qualité & Prix :<br>on ne choisit pas</h1>
+                <p>Chez Panda, on prouve chaque jour qu'un produit efficace peut être vendu à un prix juste. Voici comment on y arrive.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-eyebrow">Nos engagements</div>
+            <h2 class="section-title">Ce qui fait la différence Panda</h2>
+            <div class="pillars-grid">
+                <div class="pillar-card reveal">
+                    <div class="pillar-icon-wrap">🔬</div>
+                    <div>
+                        <h3>Formules éprouvées</h3>
+                        <p>Nos formules sont développées et testées pour garantir une efficacité maximale. On ne mise pas sur l'apparence, on mise sur le résultat dans votre évier et sur vos sols.</p>
+                    </div>
+                </div>
+                <div class="pillar-card reveal">
+                    <div class="pillar-icon-wrap">🏭</div>
+                    <div>
+                        <h3>Production maîtrisée</h3>
+                        <p>En contrôlant notre chaîne de production, on réduit les coûts sans jamais réduire la qualité. Ce gain, on vous le reverse directement en prix.</p>
+                    </div>
+                </div>
+                <div class="pillar-card reveal">
+                    <div class="pillar-icon-wrap">🛡️</div>
+                    <div>
+                        <h3>Contrôle qualité systématique</h3>
+                        <p>Chaque lot produit est contrôlé avant expédition. Concentration, viscosité, parfum, efficacité — rien n'est laissé au hasard.</p>
+                    </div>
+                </div>
+                <div class="pillar-card reveal">
+                    <div class="pillar-icon-wrap">📦</div>
+                    <div>
+                        <h3>Conditionnement pratique</h3>
+                        <p>Grands flacons, bouchons doseurs, emballages solides — nos contenants sont pensés pour durer et pour un usage quotidien sans complication.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="qualite-numbers">
+            <div class="qualite-numbers-inner">
+                <div class="reveal">
+                    <div class="q-num-value counter" data-target="50000" data-suffix="+">50 000+</div>
+                    <div class="q-num-label">foyers satisfaits en France</div>
+                </div>
+                <div class="reveal">
+                    <div class="q-num-value">0,50€</div>
+                    <div class="q-num-label">le prix de départ de nos produits</div>
+                </div>
+                <div class="reveal">
+                    <div class="q-num-value counter" data-target="9" data-suffix="+">9+</div>
+                    <div class="q-num-label">parfums et variantes disponibles</div>
+                </div>
+                <div class="reveal">
+                    <div class="q-num-value counter" data-target="100" data-suffix="%">100%</div>
+                    <div class="q-num-label">de nos produits testés avant vente</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" style="text-align:center;">
+            <div class="section-eyebrow" style="justify-content:center;">Nos garanties</div>
+            <h2 class="section-title">Ce qu'on vous promet</h2>
+            <p class="section-desc" style="margin:0 auto 48px;">Des engagements concrets, pas des slogans.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:24px;justify-content:center;">
+                <div style="background:var(--sage);border:1.5px solid var(--green-light);border-radius:var(--radius-md);padding:32px 40px;min-width:160px;transition:all 0.3s;cursor:default;" onmouseenter="this.style.transform='translateY(-6px)';this.style.boxShadow='0 12px 32px rgba(30,77,24,0.13)'" onmouseleave="this.style.transform='';this.style.boxShadow=''">
+                    <div style="font-size:2.8rem;margin-bottom:14px;">💪</div>
+                    <div style="font-family:'Quicksand',sans-serif;font-weight:700;font-size:0.95rem;color:var(--green-deep);">Efficacité testée</div>
+                    <div style="font-size:0.78rem;color:var(--grey);margin-top:6px;">Chaque formule validée</div>
+                </div>
+                <div style="background:var(--sage);border:1.5px solid var(--green-light);border-radius:var(--radius-md);padding:32px 40px;min-width:160px;transition:all 0.3s;cursor:default;" onmouseenter="this.style.transform='translateY(-6px)';this.style.boxShadow='0 12px 32px rgba(30,77,24,0.13)'" onmouseleave="this.style.transform='';this.style.boxShadow=''">
+                    <div style="font-size:2.8rem;margin-bottom:14px;">💸</div>
+                    <div style="font-family:'Quicksand',sans-serif;font-weight:700;font-size:0.95rem;color:var(--green-deep);">Prix fixes</div>
+                    <div style="font-size:0.78rem;color:var(--grey);margin-top:6px;">Pas de mauvaise surprise</div>
+                </div>
+                <div style="background:var(--sage);border:1.5px solid var(--green-light);border-radius:var(--radius-md);padding:32px 40px;min-width:160px;transition:all 0.3s;cursor:default;" onmouseenter="this.style.transform='translateY(-6px)';this.style.boxShadow='0 12px 32px rgba(30,77,24,0.13)'" onmouseleave="this.style.transform='';this.style.boxShadow=''">
+                    <div style="font-size:2.8rem;margin-bottom:14px;">🛡️</div>
+                    <div style="font-family:'Quicksand',sans-serif;font-weight:700;font-size:0.95rem;color:var(--green-deep);">Qualité constante</div>
+                    <div style="font-size:0.78rem;color:var(--grey);margin-top:6px;">Lot après lot</div>
+                </div>
+                <div style="background:var(--sage);border:1.5px solid var(--green-light);border-radius:var(--radius-md);padding:32px 40px;min-width:160px;transition:all 0.3s;cursor:default;" onmouseenter="this.style.transform='translateY(-6px)';this.style.boxShadow='0 12px 32px rgba(30,77,24,0.13)'" onmouseleave="this.style.transform='';this.style.boxShadow=''">
+                    <div style="font-size:2.8rem;margin-bottom:14px;">📞</div>
+                    <div style="font-family:'Quicksand',sans-serif;font-weight:700;font-size:0.95rem;color:var(--green-deep);">SAV réactif</div>
+                    <div style="font-size:0.78rem;color:var(--grey);margin-top:6px;">Réponse sous 24h</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ═══════════════════ PAGE CONTACT ═══════════════════ -->
+    <div class="page" id="page-contact">
+        <div class="contact-page">
+            <div class="contact-header" style="padding-top:calc(80px + 72px);">
+                <div class="section-eyebrow" style="justify-content:center;">On est là pour vous</div>
+                <h1 class="hero-title">Contactez-nous</h1>
+                <p class="hero-subtitle" style="margin:0 auto;">Une question sur un produit, un partenariat ou une commande ? Nous répondons sous 24h.</p>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h3>Retrouvez-nous</h3>
+                    <div class="contact-item">
+                        <div class="contact-icon-box">📍</div>
+                        <div class="contact-item-text"><strong>Adresse</strong><span>12 Rue du Bambou, 75010 Paris, France</span></div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon-box">📧</div>
+                        <div class="contact-item-text"><strong>Email</strong><span>bonjour@panda-proprete.fr</span></div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon-box">📞</div>
+                        <div class="contact-item-text"><strong>Téléphone</strong><span>+33 1 23 45 67 89</span></div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon-box">🕐</div>
+                        <div class="contact-item-text"><strong>Horaires</strong><span>Lun – Ven : 9h – 18h</span></div>
+                    </div>
+                    <div class="contact-socials">
+                        <div class="social-btn" title="Instagram">📸</div>
+                        <div class="social-btn" title="Facebook">👍</div>
+                        <div class="social-btn" title="TikTok">🎵</div>
+                        <div class="social-btn" title="LinkedIn">💼</div>
+                    </div>
+                </div>
+                <div class="contact-form-card">
+                    <h3>Envoyez-nous un message</h3>
+                    <div id="contactForm">
+                        <div class="form-row">
+                            <div class="form-group"><label>Prénom</label><input type="text" placeholder="Marie"></div>
+                            <div class="form-group"><label>Nom</label><input type="text" placeholder="Dupont"></div>
+                        </div>
+                        <div class="form-group"><label>Email</label><input type="email" placeholder="marie@exemple.fr"></div>
+                        <div class="form-group">
+                            <label>Sujet</label>
+                            <select>
+                                <option>Question sur un produit</option>
+                                <option>Service après-vente</option>
+                                <option>Partenariat / Distribution</option>
+                                <option>Presse / Médias</option>
+                                <option>Autre</option>
+                            </select>
+                        </div>
+                        <div class="form-group"><label>Message</label><textarea placeholder="Bonjour, j'aimerais savoir…"></textarea></div>
+                        <button class="form-submit" onclick="submitForm()">Envoyer mon message ✉️</button>
+                    </div>
+                    <div class="form-success" id="formSuccess">
+                        <div class="success-icon">🐼</div>
+                        <div>Message envoyé avec succès !</div>
+                        <div style="font-size:0.88rem;color:var(--grey);margin-top:8px;font-family:'Inter',sans-serif;font-weight:400;">Nous vous répondrons dans les 24 heures.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <div><span class="footer-logo-icon">🐼</span><span class="footer-logo-text">Panda</span></div>
+                <p>Des produits ménagers efficaces et accessibles pour un foyer propre au meilleur prix.</p>
+                <div class="newsletter-form">
+                    <input type="email" class="newsletter-input" placeholder="Votre email...">
+                    <button class="newsletter-submit">S'abonner</button>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Navigation</h4>
+                <ul>
+                    <li onclick="showPage('home')">Accueil</li>
+                    <li onclick="showPage('products')">Nos produits</li>
+                    <li onclick="showPage('about')">À propos</li>
+                    <li onclick="showPage('qualite')">Qualité & Prix</li>
+                    <li onclick="showPage('contact')">Contact</li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Produits</h4>
+                <ul>
+                    <li onclick="showPage('products')">Lessives</li>
+                    <li onclick="showPage('products')">Nettoyants</li>
+                    <li onclick="showPage('products')">Papier Multi-Usages</li>
+                    <li onclick="showPage('products')">Parfums d'intérieur</li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Légal</h4>
+                <ul>
+                    <li>Mentions légales</li>
+                    <li>CGV</li>
+                    <li>Politique de confidentialité</li>
+                    <li>Cookies</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2025 Panda Propreté. Tous droits réservés.</span>
+            <span>Fait avec 💚 en France</span>
+        </div>
+    </footer>
+
+    <script>
+        /* ── Navigation ── */
+        function showPage(id, linkEl) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + id).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            if (linkEl) linkEl.classList.add('active');
+            else {
+                const map = { home: 0, products: 1, about: 2, qualite: 3, contact: 4 };
+                const links = document.querySelectorAll('.nav-links .nav-link');
+                if (links[map[id]]) links[map[id]].classList.add('active');
+            }
+            setTimeout(checkReveal, 120);
+        }
+
+        function toggleMobile() { document.getElementById('mobileMenu').classList.toggle('open'); }
+
+        function filterProducts(cat, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('.product-card').forEach(card => {
+                card.style.display = (cat === 'all' || card.dataset.cat === cat) ? '' : 'none';
+            });
+        }
+
+        function selectFlavor(chip) {
+            chip.closest('.flavors').querySelectorAll('.flavor-chip').forEach(c => c.classList.remove('selected'));
+            chip.classList.add('selected');
+        }
+
+        function addToast() {
+            const t = document.getElementById('toast');
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2800);
+        }
+
+        function submitForm() {
+            document.getElementById('contactForm').style.display = 'none';
+            document.getElementById('formSuccess').style.display = 'block';
+        }
+
+        /* ── Scroll progress ── */
+        function updateScrollProgress() {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            document.getElementById('scrollProgress').style.width = progress + '%';
+            document.getElementById('mainNav').classList.toggle('scrolled', scrollTop > 20);
+        }
+
+        /* ── Reveal ── */
+        function checkReveal() {
+            const vh = window.innerHeight;
+            document.querySelectorAll('.page.active .reveal').forEach(el => {
+                if (el.getBoundingClientRect().top < vh * 0.92) el.classList.add('in-view');
+            });
+            document.querySelectorAll('.page.active .counter').forEach(el => {
+                if (el.getBoundingClientRect().top < vh * 0.95 && !el.dataset.animated) {
+                    el.dataset.animated = '1';
+                    animateCounter(el);
+                }
+            });
+        }
+
+        function animateCounter(el) {
+            const target = parseInt(el.dataset.target);
+            const suffix = el.dataset.suffix || '';
+            const duration = 1800;
+            const start = performance.now();
+
+            function step(now) {
+                const elapsed = now - start;
+                const progress = Math.min(elapsed / duration, 1);
+                const ease = 1 - Math.pow(1 - progress, 3);
+                const current = Math.floor(ease * target);
+                if (target >= 1000) {
+                    el.textContent = current.toLocaleString('fr-FR') + suffix;
+                } else {
+                    el.textContent = current + suffix;
+                }
+                if (progress < 1) requestAnimationFrame(step);
+            }
+            requestAnimationFrame(step);
+        }
+
+        window.addEventListener('scroll', () => {
+            updateScrollProgress();
+            checkReveal();
+        }, { passive: true });
+        window.addEventListener('load', () => {
+            updateScrollProgress();
+            checkReveal();
+        });
+        setTimeout(checkReveal, 200);
+    </script>
+
+</body>
+</html>
